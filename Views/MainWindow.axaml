@@ -1,0 +1,74 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Trabajo_Individual.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="Trabajo_Individual.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Trabajo_Individual">
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+    <UniformGrid Columns="2">
+        <Border Margin="10" CornerRadius="10" 
+                Padding="5"
+                Width="250"
+                BorderBrush="Blue"
+                BoxShadow="10 10 5 2 DarkGray"
+                BorderThickness="2">
+
+            <StackPanel>
+                <TextBlock HorizontalAlignment="Center" Text="{Binding Greeting}"/>
+
+                <ComboBox 
+                    Width="200"
+                    Margin="15"
+                    SelectedItem="{Binding Tarea.Categoria}"
+                    ItemsSource="{Binding ListarCategorias}"/>
+
+                <TextBox 
+                    Width="200"
+                    Margin="15"
+                    Text="{Binding Tarea.Trabajo}"/>
+
+                <CalendarDatePicker 
+                    Width="200"
+                    Margin="15"
+                    SelectedDate="{Binding Tarea.FechaLimite}"/>
+
+                <CheckBox 
+                          x:Name="Condiciones"
+                          Content="Aceptar condiciones"
+                          Margin="10"
+                          HorizontalAlignment="Center"
+                         />
+
+
+                <Button Width="200"
+                        Margin="10"
+                        Content="CREAR"
+                        Command="{Binding MostrarTarea}"
+                        CommandParameter="{Binding ElementName=Condiciones}" 
+                        HorizontalAlignment="Center"
+                        HorizontalContentAlignment="Center"/>
+                
+
+            </StackPanel>
+        </Border>
+        <StackPanel >
+            <ComboBox ItemsSource="{Binding Tarea}" />
+            <ListBox Background="DarkGray"
+                     Width="400"
+                     Height="250"
+                     ItemsSource="{Binding Tarea}">
+                ...
+            </ListBox>
+        </StackPanel>
+
+    </UniformGrid>
+</Window>
