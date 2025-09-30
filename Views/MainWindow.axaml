@@ -10,20 +10,21 @@
         Title="Trabajo_Individual">
 
     <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowViewModel/>
     </Design.DataContext>
+
     <UniformGrid Columns="2">
-        <Border Margin="10" CornerRadius="10" 
+        <!-- Panel izquierdo: creación -->
+        <Border Margin="10" 
+                CornerRadius="10" 
                 Padding="5"
-                Width="250"
-                BorderBrush="Blue"
+                Width="250" 
+                BorderBrush="Gray"
                 BoxShadow="10 10 5 2 DarkGray"
                 BorderThickness="2">
 
             <StackPanel>
-                <TextBlock HorizontalAlignment="Center" Text="{Binding Greeting}"/>
+                <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" Margin="5"/>
 
                 <ComboBox 
                     Width="200"
@@ -34,41 +35,54 @@
                 <TextBox 
                     Width="200"
                     Margin="15"
-                    Text="{Binding Tarea.Trabajo}"/>
+                    Watermark="Escribe la tarea"
+                    Text="{Binding Tarea.Descripcion, Mode=TwoWay}"/>
 
                 <CalendarDatePicker 
                     Width="200"
                     Margin="15"
-                    SelectedDate="{Binding Tarea.FechaLimite}"/>
+                    Watermark="Selecciona fecha límite"
+                    SelectedDate="{Binding Tarea.FechaLimite, Mode=TwoWay}"/>
 
                 <CheckBox 
-                          x:Name="Condiciones"
-                          Content="Aceptar condiciones"
-                          Margin="10"
-                          HorizontalAlignment="Center"
-                         />
-
+                    Content="Aceptar condiciones"
+                    IsChecked="{Binding AceptarCondiciones}"
+                    Margin="10"
+                    HorizontalAlignment="Center"/>
 
                 <Button Width="200"
                         Margin="10"
                         Content="CREAR"
-                        Command="{Binding MostrarTarea}"
-                        CommandParameter="{Binding ElementName=Condiciones}" 
-                        HorizontalAlignment="Center"
-                        HorizontalContentAlignment="Center"/>
-                
+                        Command="{Binding MostrarTareaCommand}"
+                        HorizontalAlignment="Center"/>
+
 
             </StackPanel>
         </Border>
-        <StackPanel >
-            <ComboBox ItemsSource="{Binding Tarea}" />
-            <ListBox Background="DarkGray"
+
+        <!-- Panel derecho: listado -->
+        <StackPanel>
+            <TextBlock Text="TAREAS CREADAS"
+                       FontSize="16"
+                       FontWeight="Bold"
+                       Margin="0 0 0 10"
+                       HorizontalAlignment="Center"/>
+
+            <ListBox Background="Plum"
                      Width="400"
                      Height="250"
-                     ItemsSource="{Binding Tarea}">
-                ...
+                     ItemsSource="{Binding Tareas}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <Image Width="30" Source="avares://Trabajo_Individual/Assets/tarea.jpg"/>
+                            <TextBlock Text="{Binding Categoria}" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding Descripcion}"/>
+                            <TextBlock Text="{Binding FechaLimite, StringFormat='dd/MM/yyyy'}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
             </ListBox>
         </StackPanel>
-
     </UniformGrid>
 </Window>
