@@ -9,22 +9,19 @@
         Icon="/Assets/avalonia-logo.ico"
         Title="Trabajo_Individual">
 
-  
-
-
-<Design.DataContext>
+  <Design.DataContext>
     <vm:MainWindowViewModel/>
 </Design.DataContext>
 
 <Grid ColumnDefinitions="2*,3*" RowDefinitions="*">
-    <!-- Panel Izquierdo: Formulario -->
+    <!-- Formulario -->
     <Border Margin="15"
             CornerRadius="12"
             Padding="20"
             Background="#FAFAFA"
             BorderBrush="#CCC"
-            BorderThickness="1"
-            BoxShadow="4 4 12 #888">
+            BorderThickness="1">
+            
         <StackPanel Spacing="10">
             <TextBlock Text="Nueva Tarea"
                        FontSize="18"
@@ -97,15 +94,15 @@
         </StackPanel>
     </Border>
 
-    <!-- Panel Derecho: Listado -->
+    <!--  Listado de tareas -->
     <Border Grid.Column="1"
             Margin="15"
             CornerRadius="12"
             Padding="15"
             Background="White"
             BorderBrush="#CCC"
-            BorderThickness="1"
-            BoxShadow="4 4 12 #888">
+            BorderThickness="1">
+            
         <StackPanel>
             <TextBlock Text="Tareas Creadas"
                        FontSize="18"
@@ -123,8 +120,8 @@
                     <DataTemplate>
                         <Border Margin="5" Padding="8"
                                 CornerRadius="8"
-                                Background="White"
-                                BoxShadow="2 2 6 #999">
+                                Background="White">
+                                
                             <StackPanel>
                                 <Image Width="50" Source="avares://Trabajo_Individual/Assets/tarea.jpg"/>
                                 <TextBlock Text="{Binding Categoria}" FontWeight="Bold" Foreground="#6A0DAD"/>
