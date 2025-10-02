@@ -13,12 +13,13 @@ namespace Trabajo_Individual.ViewModels
         [ObservableProperty] private string mensaje = string.Empty;
         [ObservableProperty] private Tarea tarea = new();
         [ObservableProperty] private bool aceptarCondiciones;
+        [ObservableProperty] private bool avanzadas = false;
 
-        [ObservableProperty] private bool modoEditar = false;
-        [ObservableProperty] private bool modoCrear = true;
+        [ObservableProperty] private bool modoEditar = true;
+        [ObservableProperty] private bool modoCrear = false;
         public string Greeting { get; } = "FORMULARIO DE TAREAS";
 
-        public ObservableCollection<Tarea> Tareas { get; } = new ObservableCollection<Tarea>();
+        public ObservableCollection<Tarea> Tareas { get; } = new();
 
         [ObservableProperty] private Tarea tareaSeleccionada = new();
 
@@ -30,10 +31,10 @@ namespace Trabajo_Individual.ViewModels
         public MainWindowViewModel()
         {
 
-            CargarTreas();
+            CargarTareas();
         }
 
-        private void CargarTreas()
+        private void CargarTareas()
         {
             Tarea tarea = new Tarea();
             tarea.Categoria = "estudio";
@@ -44,15 +45,36 @@ namespace Trabajo_Individual.ViewModels
             Tarea tarea2 = new Tarea();
             tarea2.Categoria = "casa";
             tarea2.Descripcion = "compras";
-            tarea.FechaLimite = DateTime.Now;
+            tarea2.FechaLimite = DateTime.Now;
             Tareas.Add(tarea2);
 
             Tarea tarea3 = new Tarea();
             tarea3.Categoria = "trabajo";
             tarea3.Descripcion = "enviar email";
-            tarea.FechaLimite = DateTime.Now;
+            tarea3.FechaLimite = DateTime.Now;
             Tareas.Add(tarea3);
         }
+        [RelayCommand]
+        public void Cancelar()
+        {
+            Tarea = new Tarea();
+            ModoCrear = true;
+            ModoEditar = false;
+        }
+
+        public void MostrarOpcionesAvanzadas()
+        {
+            if (Avanzadas)
+            {
+                Avanzadas = false;
+            }
+            else
+            {
+                Avanzadas = true;
+            }
+
+        }
+
 
         [RelayCommand]
         public void ComprobarFechaLimite()
@@ -81,50 +103,67 @@ namespace Trabajo_Individual.ViewModels
             ModoCrear = false;
             ModoEditar = false;
         }
-
         [RelayCommand]
-        public void MostrarTarea(object parameter)
+        public void EditarTarea()
         {
-            bool okCheckFecha = CheckDate();
-
-            if (okCheckFecha == false)
+            if (TareaSeleccionada == null)
             {
+                Mensaje = "Debes seleccionar una tarea para editar";
                 return;
             }
 
-            if (!CheckDate())
-            {
-                return;
-            }
-
-            CheckBox check = (CheckBox)parameter;
-
-            if (check.IsChecked is false)
-            {
-                Mensaje = "Debes marcar el check";
-                Console.WriteLine("Debes marcar el check");
-                check.Foreground = Brushes.Red;
-                check.FontWeight = FontWeight.Bold;
-                return;
-            }
-
+            // Validaciones
             if (string.IsNullOrWhiteSpace(Tarea.Descripcion))
             {
-                Mensaje = "Debes indicar su descripcion";
-                Console.WriteLine("Debes indicar una descripcion");
-            }
-            else
-            {
-                // SE CREA LA TAREA
-                Console.WriteLine(Tarea.Categoria + " " + Tarea.Descripcion);
-                Mensaje = String.Empty;
-                Tareas.Add(tarea);
-                Tarea = new Tarea();
-                check.IsChecked = false;
+                Mensaje = "Debes escribir una descripción";
+                return;
             }
 
+            if (string.IsNullOrWhiteSpace(Tarea.Categoria))
+            {
+                Mensaje = "Debes seleccionar una categoría";
+                return;
+            }
+
+            if (!CheckDate()) return;
+
+            // Actualizar la tarea en la colección
+            TareaSeleccionada.Descripcion = Tarea.Descripcion;
+            TareaSeleccionada.Categoria = Tarea.Categoria;
+            TareaSeleccionada.FechaLimite = Tarea.FechaLimite;
+            TareaSeleccionada.Completada = Tarea.Completada;
+            TareaSeleccionada.Prioridad = Tarea.Prioridad;
+
+            // Limpiar formulario
+            Cancelar();
         }
 
 
+        [RelayCommand]
+        public void MostrarTarea()
+        {
+           
+           
+
+            if (string.IsNullOrWhiteSpace(Tarea.Descripcion))
+            {
+                Mensaje = "Debes escribir una descripción";
+                return;
+            }
+            if(!CheckDate()) return;
+
+            var nuevaTarea = new Tarea
+            {
+                Descripcion = Tarea.Descripcion,
+                Categoria = Tarea.Categoria,
+                FechaLimite = Tarea.FechaLimite,
+                Completada = Tarea.Completada,
+                Prioridad = Tarea.Prioridad
+            };
+
+            Tareas.Add(nuevaTarea);
+
+
+        }
     }
 }

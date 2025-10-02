@@ -9,80 +9,133 @@
         Icon="/Assets/avalonia-logo.ico"
         Title="Trabajo_Individual">
 
-    <Design.DataContext>
-        <vm:MainWindowViewModel/>
-    </Design.DataContext>
-
-    <UniformGrid Columns="2">
-        <!-- Panel izquierdo: creación -->
-        <Border Margin="10" 
-                CornerRadius="10" 
-                Padding="5"
-                Width="250" 
-                BorderBrush="Gray"
-                BoxShadow="10 10 5 2 DarkGray"
-                BorderThickness="2">
-
-            <StackPanel>
-                <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" Margin="5"/>
-
-                <ComboBox 
-                    Width="200"
-                    Margin="15"
-                    SelectedItem="{Binding Tarea.Categoria}"
-                    ItemsSource="{Binding ListarCategorias}"/>
-
-                <TextBox 
-                    Width="200"
-                    Margin="15"
-                    Watermark="Escribe la tarea"
-                    Text="{Binding Tarea.Descripcion, Mode=TwoWay}"/>
-
-                <CalendarDatePicker 
-                    Width="200"
-                    Margin="15"
-                    Watermark="Selecciona fecha límite"
-                    SelectedDate="{Binding Tarea.FechaLimite, Mode=TwoWay}"/>
-
-                <CheckBox 
-                    Content="Aceptar condiciones"
-                    IsChecked="{Binding AceptarCondiciones}"
-                    Margin="10"
-                    HorizontalAlignment="Center"/>
-
-                <Button Width="200"
-                        Margin="10"
-                        Content="CREAR"
-                        Command="{Binding MostrarTareaCommand}"
-                        HorizontalAlignment="Center"/>
+  
 
 
+<Design.DataContext>
+    <vm:MainWindowViewModel/>
+</Design.DataContext>
+
+<Grid ColumnDefinitions="2*,3*" RowDefinitions="*">
+    <!-- Panel Izquierdo: Formulario -->
+    <Border Margin="15"
+            CornerRadius="12"
+            Padding="20"
+            Background="#FAFAFA"
+            BorderBrush="#CCC"
+            BorderThickness="1"
+            BoxShadow="4 4 12 #888">
+        <StackPanel Spacing="10">
+            <TextBlock Text="Nueva Tarea"
+                       FontSize="18"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       Foreground="#6A0DAD"/>
+
+            <ComboBox 
+                Width="250"
+                HorizontalAlignment="Center"
+                SelectedItem="{Binding Tarea.Categoria}"
+                ItemsSource="{Binding ListarCategorias}"
+             />
+
+            <TextBox 
+                Width="250"
+                HorizontalAlignment="Center"
+                Watermark="Escribe la tarea"
+                Text="{Binding Tarea.Descripcion, Mode=TwoWay}"/>
+
+            <CalendarDatePicker 
+                Width="250"
+                HorizontalAlignment="Center"
+                Watermark="Selecciona fecha límite"
+                SelectedDate="{Binding Tarea.FechaLimite, Mode=TwoWay}"/>
+
+            <TextBlock Text="{Binding Mensaje}"
+                       Foreground="DarkMagenta"
+                       FontWeight="Bold"
+                       HorizontalAlignment="Center"
+                       Margin="5"/>
+
+            <!-- Opciones avanzadas -->
+            <StackPanel Orientation="Horizontal" 
+                        IsVisible="{Binding Avanzadas}"
+                        HorizontalAlignment="Center"
+                        Spacing="8">
+                <TextBox Width="100" Watermark="Dato extra 1"/>
+                <TextBox Width="120" Watermark="Dato extra 2"/>
             </StackPanel>
-        </Border>
 
-        <!-- Panel derecho: listado -->
+            <CheckBox 
+                Content="Aceptar todas las condiciones"
+                IsChecked="{Binding AceptarCondiciones}"
+                Margin="10"
+                HorizontalAlignment="Center"/>
+
+            <!-- Botones -->
+            <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+                <Button Width="100"
+                        Content="Crear"
+                        Background="PaleVioletRed"
+                        Foreground="White"
+                        Command="{Binding MostrarTareaCommand}"/>
+                
+                <Button Width="100"
+                        IsVisible="{Binding ModoEditar}"
+                        Content="Editar"
+                        Background="Plum"
+                        Foreground="White"
+                        Command="{Binding EditarTareaCommand}"/>
+                
+                <Button Width="100"
+                        IsVisible="{Binding ModoEditar}"
+                        Content="Cancelar"
+                        Background="Gray"
+                        Foreground="White"
+                        Command="{Binding CancelarCommand}"/>
+            </StackPanel>
+        </StackPanel>
+    </Border>
+
+    <!-- Panel Derecho: Listado -->
+    <Border Grid.Column="1"
+            Margin="15"
+            CornerRadius="12"
+            Padding="15"
+            Background="White"
+            BorderBrush="#CCC"
+            BorderThickness="1"
+            BoxShadow="4 4 12 #888">
         <StackPanel>
-            <TextBlock Text="TAREAS CREADAS"
-                       FontSize="16"
+            <TextBlock Text="Tareas Creadas"
+                       FontSize="18"
                        FontWeight="Bold"
                        Margin="0 0 0 10"
+                       Foreground="#6A0DAD"
                        HorizontalAlignment="Center"/>
 
-            <ListBox Background="Plum"
-                     Width="400"
-                     Height="250"
+            <ListBox Background="#F3E5F5"
+                     BorderThickness="0"
+                     CornerRadius="8"
+                     SelectedItem="{Binding TareaSeleccionada}"
                      ItemsSource="{Binding Tareas}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel>
-                            <Image Width="30" Source="avares://Trabajo_Individual/Assets/tarea.jpg"/>
-                            <TextBlock Text="{Binding Categoria}" FontWeight="Bold"/>
-                            <TextBlock Text="{Binding Descripcion}"/>
-                            <TextBlock Text="{Binding FechaLimite, StringFormat='dd/MM/yyyy'}"/>
-                        </StackPanel>
+                        <Border Margin="5" Padding="8"
+                                CornerRadius="8"
+                                Background="White"
+                                BoxShadow="2 2 6 #999">
+                            <StackPanel>
+                                <Image Width="50" Source="avares://Trabajo_Individual/Assets/tarea.jpg"/>
+                                <TextBlock Text="{Binding Categoria}" FontWeight="Bold" Foreground="#6A0DAD"/>
+                                <TextBlock Text="{Binding Descripcion}" Foreground="#333"/>
+                                <TextBlock Text="{Binding FechaLimite, StringFormat='dd/MM/yyyy'}" Foreground="DarkSlateGray"/>
+                            </StackPanel>
+                        </Border>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
         </StackPanel>
-    </UniformGrid>
+    </Border>
+</Grid>
 </Window>
